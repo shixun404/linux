@@ -620,34 +620,33 @@ void free_hyp_pgds(void)
 /* Map physical memory to EL2's address space */
 void map_mem_el2(void)
 {
-		struct memblock_region *reg;
-			int err = 0;
-				void *from, *to;
+	struct memblock_region *reg;
+	int err = 0;
+	void *from, *to;
 
-					for_each_memblock(memory, reg) {
-								phys_addr_t start = reg->base;
-										phys_addr_t end = start + reg->size;
+	for_each_memblock(memory, reg) {
+		phys_addr_t start = reg->base;
+		phys_addr_t end = start + reg->size;
 
-												if (start >= end)
-																break;
-														if (memblock_is_nomap(reg))
-																		continue;
+		if (start >= end)
+			break;
+		if (memblock_is_nomap(reg))
+			continue;
 
-																kvm_info("mapping mem start %llx end %llx to EL2\n", start, end);
-																		from = (void *)start;
-																				to = (void *)end;
-																						err = create_hyp_mappings(from, to, PAGE_HYP);
-																								if (err) {
-																												kvm_err("Cannot map rodata section\n");
-																															goto out_err;
-																																	}
-																									}
+		kvm_info("mapping mem start %llx end %llx to EL2\n", start, end);
+		from = (void *)start;
+		to = (void *)end;
+		err = create_hyp_mappings(from, to, PAGE_HYP);
+		if (err) {
+			kvm_err("Cannot map rodata section\n");
+			goto out_err;
+		}
+	}
 
 out_err:
-						return;
+	return;
 }
 #endif
-
 static void create_hyp_pte_mappings(pmd_t *pmd, unsigned long start,
 				    unsigned long end, unsigned long pfn,
 				    pgprot_t prot)
@@ -1010,17 +1009,17 @@ int create_hyp_exec_mappings(phys_addr_t phys_addr, size_t size,
 
 #ifdef CONFIG_VERIFIED_KVM 
 int create_hypsec_io_mappings(phys_addr_t phys_addr, size_t size,
-					      unsigned long *haddr)
+			      unsigned long *haddr)
 {
-		int ret = __create_hyp_mappings(hyp_pgd, PTRS_PER_PGD,
-								    phys_addr, phys_addr + size,
-								    				    __phys_to_pfn(phys_addr), PAGE_HYP_DEVICE);
+	int ret = __create_hyp_mappings(hyp_pgd, PTRS_PER_PGD,
+				    phys_addr, phys_addr + size,
+				    __phys_to_pfn(phys_addr), PAGE_HYP_DEVICE);
 
-			if (ret)
-						return -EINVAL;
+	if (ret)
+		return -EINVAL;
 
-				*haddr = phys_addr;
-					return 0;
+	*haddr = phys_addr;
+	return 0;
 }
 #endif
 
@@ -1973,6 +1972,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
 			new_pud = kvm_s2pud_mkexec(new_pud);
 
 		ret = stage2_set_pud_huge(kvm, memcache, fault_ipa, &new_pud);
+		BUG();
 	} else if (vma_pagesize == PMD_SIZE) {
 #ifndef CONFIG_VERIFIED_KVM
 		pmd_t new_pmd = kvm_pfn_pmd(pfn, mem_type);

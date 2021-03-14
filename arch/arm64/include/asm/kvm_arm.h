@@ -83,9 +83,9 @@
 #ifdef CONFIG_VERIFIED_KVM
 #define HCR_HYPSEC_HOST_NVHE_FLAGS (HCR_RW | HCR_AMO | HCR_VM)
 #define HCR_HYPSEC_VM_FLAGS (HCR_TSC | HCR_TSW | HCR_TWE | HCR_TWI | HCR_VM | \
-				HCR_BSU_IS | HCR_FB | HCR_TAC | \
-	       			HCR_AMO | HCR_SWIO | HCR_TIDCP | HCR_RW | HCR_TLOR | \
-           			     HCR_FMO | HCR_IMO)
+			     HCR_BSU_IS | HCR_FB | HCR_TAC | \
+			     HCR_AMO | HCR_SWIO | HCR_TIDCP | HCR_RW | HCR_TLOR | \
+			     HCR_FMO | HCR_IMO)
 #endif
 
 /* TCR_EL2 Registers bits */
@@ -302,8 +302,8 @@
 #define MDCR_EL2_HPMN_MASK	(0x1F)
 #ifdef CONFIG_VERIFIED_KVM
 #define HYPSEC_MDCR_EL2_FLAG	(MDCR_EL2_TPM | MDCR_EL2_TPMS | MDCR_EL2_TPMCR | \
-						MDCR_EL2_TDRA | MDCR_EL2_TDOSA | MDCR_EL2_TDA | \
-										MDCR_EL2_TDE)
+				MDCR_EL2_TDRA | MDCR_EL2_TDOSA | MDCR_EL2_TDA | \
+				MDCR_EL2_TDE)
 #endif
 
 /* For compatibility with fault code shared with 32-bit */

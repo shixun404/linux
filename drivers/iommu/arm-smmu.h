@@ -306,8 +306,8 @@ struct arm_smmu_device {
 	/* IOMMU core code handle */
 	struct iommu_device		iommu;
 #ifdef CONFIG_VERIFIED_KVM
-	        u64                             phys_base;
-		        u32                             index;
+	u64                             phys_base;
+	u32                             index;
 #endif
 };
 

@@ -77,15 +77,15 @@ static void install_el2_runtime(void *discard)
 #endif
 int kvm_arch_hardware_setup(void)
 {
+#ifdef CONFIG_VERIFIED_KVM
+		on_each_cpu(install_el2_runtime, NULL, 1);
+		printk("HypSec EL2 runtime is installed\n");
+#endif
 	return 0;
 }
 
 int kvm_arch_check_processor_compat(void)
 {
-#ifdef CONFIG_VERIFIED_KVM
-		on_each_cpu(install_el2_runtime, NULL, 1);
-			printk("HypSec EL2 runtime is installed\n");
-#endif
 	return 0;
 }
 
@@ -112,13 +112,13 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
 #ifdef CONFIG_VERIFIED_KVM
 struct kvm* hypsec_arch_alloc_vm(void)
 {
-		struct kvm *kvm;
-			int vmid = hypsec_register_kvm();
-				printk("vmid: %d", vmid);
-				BUG_ON(vmid <= 0);
-					kvm = hypsec_alloc_vm(vmid);
-						kvm->arch.vmid.vmid = (u32)vmid;
-							return kvm;
+	struct kvm *kvm;
+	int vmid = hypsec_register_kvm();
+	printk("vmid: %d", vmid);
+	BUG_ON(vmid <= 0);
+	kvm = hypsec_alloc_vm(vmid);
+	kvm->arch.vmid.vmid = (u32)vmid;
+	return kvm;
 }
 #endif
 

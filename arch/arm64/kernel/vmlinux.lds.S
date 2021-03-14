@@ -273,6 +273,7 @@ SECTIONS
 	. += PAGE_SIZE * (PAGE_SIZE * 4);
 	shared_data_end = .;
 #endif
+
 	__pecoff_data_size = ABSOLUTE(. - __initdata_begin);
 	_end = .;
 

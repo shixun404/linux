@@ -501,7 +501,7 @@ struct kvm {
 	pid_t userspace_pid;
 #ifdef CONFIG_VERIFIED_KVM
 		bool verified;
-			spinlock_t hypsec_lock;
+		spinlock_t hypsec_lock;
 #endif
 };
 

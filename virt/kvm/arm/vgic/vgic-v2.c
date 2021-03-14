@@ -11,6 +11,7 @@
 #ifdef CONFIG_VERIFIED_KVM
 #include <asm/hypsec_host.h>
 #endif
+
 #include "vgic.h"
 
 static inline void vgic_v2_write_lr(int lr, u32 val)

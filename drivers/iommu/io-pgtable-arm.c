@@ -25,6 +25,7 @@
 #include <asm/hypsec_host.h>
 #endif
 #include "arm-smmu.h"
+
 #define ARM_LPAE_MAX_ADDR_BITS		52
 #define ARM_LPAE_S2_MAX_CONCAT_PAGES	16
 #define ARM_LPAE_MAX_LEVELS		4
@@ -688,10 +689,10 @@ static size_t __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,
 	WARN_ON(size % PAGE_SIZE);
 	//printk("%s iova start %lx iova end %lx\n", __func__, iova, iova + size);
 	for (i = 0; i < (size / PAGE_SIZE); i++) {
-				el2_smmu_clear(iova, cfg.cbndx, smmu_num);
-						iova += PAGE_SIZE;
-							}
-		return size;
+			el2_smmu_clear(iova, cfg.cbndx, smmu_num);
+			iova += PAGE_SIZE;
+	}
+	return size;
 #endif
 	
 }
@@ -751,13 +752,13 @@ found_translation:
 	iova &= (ARM_LPAE_BLOCK_SIZE(lvl, data) - 1);
 	return iopte_to_paddr(pte, data) | iova;
 #else
-		struct io_pgtable iop = data->iop;
-			struct arm_smmu_domain *smmu_domain = iop.cookie;
-				struct arm_smmu_cfg cfg = smmu_domain->cfg;
-					struct arm_smmu_device *smmu = smmu_domain->smmu;
-						u32 smmu_num = smmu->index;
-							phys_addr_t ret = el2_arm_lpae_iova_to_phys(iova, cfg.cbndx, smmu_num);
-								return ret;
+	struct io_pgtable iop = data->iop;
+	struct arm_smmu_domain *smmu_domain = iop.cookie;
+	struct arm_smmu_cfg cfg = smmu_domain->cfg;
+	struct arm_smmu_device *smmu = smmu_domain->smmu;
+	u32 smmu_num = smmu->index;
+	phys_addr_t ret = el2_arm_lpae_iova_to_phys(iova, cfg.cbndx, smmu_num);
+	return ret;
 #endif
 }
 

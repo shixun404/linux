@@ -1064,9 +1064,9 @@ static int __vfio_container_attach_groups(struct vfio_container *container,
 	list_for_each_entry(group, &container->group_list, container_next) {
 	
 #ifndef CONFIG_VERIFIED_KVM
-				ret = driver->ops->attach_group(data, group->iommu_group);
+		ret = driver->ops->attach_group(data, group->iommu_group);
 #else
-						ret = driver->ops->attach_group(data, group->iommu_group, vmid);
+		ret = driver->ops->attach_group(data, group->iommu_group, vmid);
 #endif
 		if (ret)
 			goto unwind;

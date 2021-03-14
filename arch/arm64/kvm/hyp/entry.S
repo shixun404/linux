@@ -173,7 +173,7 @@ SYM_INNER_LABEL(__guest_exit, SYM_L_GLOBAL)
 #	mrs	x2, isr_el1
 #	tbnz	x2, #8, 2f	// ISR_EL1.A
 #	ret
-	nop
+
 #2:
 #alternative_endif
 	// We know we have a pending asynchronous abort, now is the
