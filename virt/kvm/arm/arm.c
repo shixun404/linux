@@ -1570,9 +1570,9 @@ static int init_subsystems(void)
 	/*
 	 * Enable hardware so that subsystem initialisation can access EL2.
 	 */
-#ifndef CONFIG_VERIFIED_KVM
+
 	on_each_cpu(_kvm_arch_hardware_enable, NULL, 1);
-#endif
+
 	/*
 	 * Register CPU lower-power notifier
 	 */
@@ -1606,8 +1606,9 @@ static int init_subsystems(void)
 	kvm_coproc_table_init();
 
 out:
+#ifndef CONFIG_VERIFIED_KVM
 	on_each_cpu(_kvm_arch_hardware_disable, NULL, 1);
-
+#endif
 	return err;
 }
 

@@ -2840,6 +2840,7 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
 		r = hypsec_register_vcpu(kvm->arch.vmid.vmid, id);
 	if(r < 0)
 		goto vcpu_free_run_page;
+	vcpu->arch.vmid = kvm->arch.vmid.vmid;
 #endif
 	kvm_create_vcpu_debugfs(vcpu);
 
@@ -2876,7 +2877,6 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
 unlock_vcpu_destroy:
 	mutex_unlock(&kvm->lock);
 	debugfs_remove_recursive(vcpu->debugfs_dentry);
-	kvm_arch_vcpu_destroy(vcpu);
 vcpu_free_run_page:
 	free_page((unsigned long)vcpu->run);
 vcpu_free:
@@ -4461,8 +4461,9 @@ static void check_processor_compat(void *rtn)
 
 int kvm_init(void *opaque, unsigned vcpu_size, unsigned vcpu_align,
 		  struct module *module)
-{
+{ 
 	int r;
+	int k; 
 	int cpu;
 
 	r = kvm_arch_init(opaque);
