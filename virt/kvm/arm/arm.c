@@ -77,6 +77,7 @@ static void install_el2_runtime(void *discard)
 #endif
 int kvm_arch_hardware_setup(void)
 {
+	printk("arm.c:kvm_arch_hardware_setup");
 #ifdef CONFIG_VERIFIED_KVM
 		on_each_cpu(install_el2_runtime, NULL, 1);
 		printk("HypSec EL2 runtime is installed\n");
@@ -1820,6 +1821,7 @@ void kvm_arch_irq_bypass_start(struct irq_bypass_consumer *cons)
  */
 int kvm_arch_init(void *opaque)
 {
+	printk("arm.c+kvm_arch_init");
 	int err;
 	int ret, cpu;
 	bool in_hyp_mode;
@@ -1857,7 +1859,7 @@ int kvm_arch_init(void *opaque)
 		if (err)
 			goto out_err;
 	}
-
+	printk("arm.c+init_subsystems");
 	err = init_subsystems();
 	if (err)
 		goto out_hyp;
