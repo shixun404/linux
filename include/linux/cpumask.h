@@ -403,7 +403,9 @@ static inline void cpumask_setall(struct cpumask *dstp)
  */
 static inline void cpumask_clear(struct cpumask *dstp)
 {
+	printk("cpumask.h:cpumask_clear");
 	bitmap_zero(cpumask_bits(dstp), nr_cpumask_bits);
+	printk("cpumask.h:bitmap_zero exit!");
 }
 
 /**
@@ -764,6 +766,7 @@ static inline bool alloc_cpumask_var_node(cpumask_var_t *mask, gfp_t flags,
 
 static inline bool zalloc_cpumask_var(cpumask_var_t *mask, gfp_t flags)
 {
+	printk("cpumask.h:zalloc_cpumask_var");
 	cpumask_clear(*mask);
 	return true;
 }

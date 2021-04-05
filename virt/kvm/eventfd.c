@@ -632,7 +632,9 @@ void kvm_irq_routing_update(struct kvm *kvm)
  */
 int kvm_irqfd_init(void)
 {
+	printk("eventfd.c:kvm_irqfd_init+alloc_workqueue+enter");
 	irqfd_cleanup_wq = alloc_workqueue("kvm-irqfd-cleanup", 0, 0);
+	printk("eventfd.c:kvm_irqfd_init+alloc_workqueue+exit");
 	if (!irqfd_cleanup_wq)
 		return -ENOMEM;
 
