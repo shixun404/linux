@@ -393,20 +393,26 @@ static void print_other_cpu_stall(unsigned long gp_seq)
 	 */
 	pr_err("INFO: %s detected stalls on CPUs/tasks:\n", rcu_state.name);
 	rcu_for_each_leaf_node(rnp) {
+		printk("raw_spin_lock_irqsave_rcu_node");
 		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+		printk("rcu_print_task_stall");
 		ndetected += rcu_print_task_stall(rnp);
 		if (rnp->qsmask != 0) {
+			printk("for_each_leaf_node_possible_cpu");
 			for_each_leaf_node_possible_cpu(rnp, cpu)
 				if (rnp->qsmask & leaf_node_cpu_bit(rnp, cpu)) {
+					printk("print_cpu_stall_info");
 					print_cpu_stall_info(cpu);
 					ndetected++;
 				}
 		}
+		printk("raw_spin_unlock_irqrestore_rcu_node");
 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
 	}
-
+	printk("for_each_possible_cpu");
 	for_each_possible_cpu(cpu)
 		totqlen += rcu_get_n_cbs_cpu(cpu);
+	printk("pr_cont");
 	pr_cont("\t(detected by %d, t=%ld jiffies, g=%ld, q=%lu)\n",
 	       smp_processor_id(), (long)(jiffies - rcu_state.gp_start),
 	       (long)rcu_seq_current(&rcu_state.gp_seq), totqlen);

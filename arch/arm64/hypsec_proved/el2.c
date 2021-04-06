@@ -97,58 +97,70 @@ void __hyp_text handle_host_hvc(struct s2_host_regs *hr)
 	/* FIXME: we write return val to reg[31] as this will be restored to x0 */
 	switch (callno) {
 	case HVC_ENABLE_S2_TRANS:
+		print_string("el2.c:handle_host_hvc+HVC_ENABLE_S2_TRANS");
 		hvc_enable_s2_trans();
 		break;
 	case HVC_VCPU_RUN:
+		print_string("el2.c:handle_host_hvc+HVC_VCPU_RUN");
 		ret = (u64)__kvm_vcpu_run_nvhe((u32)hr->regs[1], (int)hr->regs[2]);
 		set_host_regs(0, ret);
 		break;
 	case HVC_TIMER_SET_CNTVOFF:
+		print_string("el2.c:handle_host_hvc+HVC_TIMER_SET_CNTVOFF");
 		__kvm_timer_set_cntvoff((u32)hr->regs[1], (u32)hr->regs[2]);
 		break;
 	// The following can only be called when VM terminates.
 	case HVC_CLEAR_VM_S2_RANGE:
+		print_string("el2.c:handle_host_hvc+HVC_CLEAR_VM_S2_RANGE");
 		__clear_vm_stage2_range((u32)hr->regs[1],
 					(phys_addr_t)hr->regs[2], (u64)hr->regs[3]);
 		break;
 	case HVC_SET_BOOT_INFO:
+		print_string("el2.c:handle_host_hvc+HVC_SET_BOOT_INFO");
 		ret = set_boot_info((u32)hr->regs[1], (unsigned long)hr->regs[2],
 			      (unsigned long)hr->regs[3]);
 		set_host_regs(0, ret);
 		break;
 	case HVC_REMAP_VM_IMAGE:
+		print_string("el2.c:handle_host_hvc+HVC_REMAP_VM_IMAGE");
 		remap_vm_image((u32)hr->regs[1], (unsigned long)hr->regs[2],
 				     (int)hr->regs[3]);
 		break;
 	case HVC_VERIFY_VM_IMAGES:
+	    print_string("el2.c:handle_host_hvc+HVC_VERIFY_VM_IMAGES");
 		//ret = (u64)__el2_verify_and_load_images((u32)hr->regs[1]);
 		//hr->regs[31] = (u64)ret;
 		verify_and_load_images((u32)hr->regs[1]);
 		set_host_regs(0, 1);
 		break;
 	case HVC_SMMU_FREE_PGD:
+		print_string("el2.c:handle_host_hvc+HVC_SMMU_FREE_PGD");
 		//print_string("\rfree smmu pgd\n");
 		__el2_free_smmu_pgd(hr->regs[1], hr->regs[2]);
 		//print_string("\rafter free smmu pgd\n");
 		break;
 	case HVC_SMMU_ALLOC_PGD:
+		print_string("el2.c:handle_host_hvc+HVC_SMMU_ALLOC_PGD");
 		//print_string("\ralloc smmu pgd\n");
 		__el2_alloc_smmu_pgd(hr->regs[1],  hr->regs[2], hr->regs[3]);
 		//print_string("\rafter alloc smmu pgd\n");
 		break;
 	case HVC_SMMU_LPAE_MAP:
+		print_string("el2.c:handle_host_hvc+HVC_SMMU_LPAE_MAP");
 		//print_string("\rsmmu mmap\n");
 		v_el2_arm_lpae_map(hr->regs[1], hr->regs[2], hr->regs[3], hr->regs[4],
 				   hr->regs[5]);
 		//print_string("\rafter smmu mmap\n");
 		break;
 	case HVC_SMMU_LPAE_IOVA_TO_PHYS:
+		print_string("el2.c:handle_host_hvc+HVC_SMMU_LPAE_IOVA_TO_PHYS");
 		//print_string("\rsmmu iova to phys\n");
 		ret = (u64)__el2_arm_lpae_iova_to_phys(hr->regs[1], hr->regs[2], hr->regs[3]);
 		set_host_regs(0, ret);
 		//print_string("\rafter smmu iova to phys\n");
 		break;
 	case HVC_SMMU_CLEAR:
+		print_string("el2.c:handle_host_hvc+HVC_SMMU_CLEAR");
 		//print_string("\rsmmu clear\n");
 		__el2_arm_lpae_clear(hr->regs[1], hr->regs[2], hr->regs[3]);
 		//print_string("\rafter smmu clear\n");
@@ -167,19 +179,22 @@ void __hyp_text handle_host_hvc(struct s2_host_regs *hr)
 		break;*/
 	case HVC_REGISTER_KVM:
 		ret = (int)register_kvm();
-		print_string("el2.c:handle_host_hvc+169 register_kvm, %d", ret);
+		print_string("el2.c:handle_host_hvc+HVC_REGISTER_KVM");
 		set_host_regs(0, ret);
 		break;
 	case HVC_REGISTER_VCPU:
+		print_string("el2.c:handle_host_hvc+HVC_REGISTER_VCPU");
 		ret = (int)register_vcpu((u32)hr->regs[1], (int)hr->regs[2]);
 		set_host_regs(0, ret);
 		break;
 	case HVC_PHYS_ADDR_IOREMAP:
+		print_string("el2.c:handle_host_hvc+HVC_PHYS_ADDR_IOREMAP");
 		//FIXME: We need to call to the new map_io function...
 		//__kvm_phys_addr_ioremap((u32)hr->regs[1], hr->regs[2], hr->regs[3], hr->regs[4]);
 		v_kvm_phys_addr_ioremap((u32)hr->regs[1], hr->regs[2], hr->regs[3], hr->regs[4]);
 		break;
 	default:
+		print_string("el2.c:handle_host_hvc+default");
 		print_string("\rno support hvc:\n");
 		printhex_ul(callno);
 		break;
