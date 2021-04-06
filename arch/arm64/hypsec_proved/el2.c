@@ -68,6 +68,7 @@ extern u32 __init_stage2_translation(void);
 //TODO: Did we prove the following?
 static void __hyp_text hvc_enable_s2_trans(void)
 {
+	print_string("el2.c:hvc_enable_s2_trans");
 	struct el2_data *el2_data;
 
 	acquire_lock_core();
@@ -91,7 +92,7 @@ static void __hyp_text hvc_enable_s2_trans(void)
 void __hyp_text handle_host_hvc(struct s2_host_regs *hr)
 {
 	u64 ret = 0, callno = hr->regs[0];
-	printk("el2.c:handle_host_hvc+94");
+	print_string("el2.c:handle_host_hvc+94");
 	set_per_cpu_host_regs((u64)hr);
 	/* FIXME: we write return val to reg[31] as this will be restored to x0 */
 	switch (callno) {
@@ -166,7 +167,7 @@ void __hyp_text handle_host_hvc(struct s2_host_regs *hr)
 		break;*/
 	case HVC_REGISTER_KVM:
 		ret = (int)register_kvm();
-		printk("el2.c:handle_host_hvc+169 register_kvm, %d", ret);
+		print_string("el2.c:handle_host_hvc+169 register_kvm, %d", ret);
 		set_host_regs(0, ret);
 		break;
 	case HVC_REGISTER_VCPU:
